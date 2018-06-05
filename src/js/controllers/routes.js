@@ -1,5 +1,5 @@
-angular.module('app').controller("UpstreamsController", ["$scope", "Kong", function ($scope, Kong) {
-  $scope.upstreams = [];
+angular.module('app').controller("RoutesController", ["$scope", "Kong", function ($scope, Kong) {
+  $scope.routes = [];
   $scope.total = null;
   $scope.offset = null;
   $scope.searchResults = {};
@@ -8,7 +8,7 @@ angular.module('app').controller("UpstreamsController", ["$scope", "Kong", funct
   var loaded_pages = [];
 
   $scope.loadMore = function() {
-    var page = '/upstreams?';
+    var page = '/routes?';
     if ($scope.offset) {
       page += 'offset=' + $scope.offset + '&';
     }
@@ -18,40 +18,38 @@ angular.module('app').controller("UpstreamsController", ["$scope", "Kong", funct
     loaded_pages.push(page);
 
     Kong.get(page).then(function(collection) {
-      console.log(collection)
       if ($scope.total === null) {
         $scope.total = 0;
       }
-      $scope.upstreams.push.apply($scope.upstreams, collection.data);
-      $scope.total += collection.total;
+      $scope.routes.push.apply($scope.routes, collection.data);
+      $scope.total += collection.data.length;
       $scope.offset = collection.offset ? collection.offset : null;
-
     });
   };
   $scope.loadMore();
 
   $scope.showDeleteModal = function (id, name) {
     $scope.current = {id: id, name: name};
-    $('#deleteUpstream').modal('open');
+    $('#deleteRoute').modal('open');
   };
 
   $scope.abortDelete = function () {
-    $('#deleteUpstream').modal('close');
+    $('#deleteRoute').modal('close');
   };
 
   $scope.performDelete = function () {
-    $('#deleteUpstream').modal('close');
-    Kong.delete('/upstreams/' + $scope.current.id).then(function (response) {
+    $('#deleteRoute').modal('close');
+    Kong.delete('/route/' + $scope.current.id).then(function (response) {
       $scope.total -= 1;
-      $scope.upstreams.forEach(function(element, index) {
+      $scope.routes.forEach(function(element, index) {
         if (element.id === $scope.current.id) {
-          $scope.upstreams.splice(index, 1);
+          $scope.routes.splice(index, 1);
         }
       });
     });
   };
 
-  $scope.searchUpstreams = function() {
+  $scope.searchRoute = function() {
     $scope.searchResults = {};
     var input = $scope.searchInput;
     if (!input) {
@@ -67,7 +65,6 @@ angular.module('app').controller("UpstreamsController", ["$scope", "Kong", funct
       });
     };
 
-    Kong.get('/upstreams?id=' + input).then(populateResults);
-    Kong.get('/upstreams?name=' + input).then(populateResults);
+    Kong.get('/routes/' + input).then(populateResults);
   };
 }]);

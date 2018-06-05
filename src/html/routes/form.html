@@ -1,0 +1,28 @@
+<div class="container">
+    <h3 class="header">{{title}}</h3>
+
+    <div class="row">
+        <div class="col s5">
+            <div class="card-panel teal">
+                <p class="white-text">
+                    The Route entities defines rules to match client requests. Each Route is associated with a Service, and a Service may have multiple Routes associated to it. Every request matching a given Route will be proxied to its associated Service.
+                </p>
+
+                <p class="white-text">
+                    Checkout <a href="https://getkong.org/docs/latest/admin-api/#add-route" target="_blank">Kong documentation</a> for the meaning of the form parameters.
+                </p>
+            </div>
+        </div>
+        <form name="addRoute" class="col s7" novalidate ng-submit="save()">
+            <object-properties schema="schema" object="route" errors="errors"></object-properties>
+            <div class="row">
+                <div class="input-field col s4">
+                    <button type="submit" class="waves-effect waves-light btn right">
+                        {{action}}
+                    </button>
+                </div>
+            </div>
+            <input type="hidden" ng-model="route.id" value="{{route.id}}"/>
+        </form>
+    </div>
+</div>

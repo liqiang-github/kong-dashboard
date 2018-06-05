@@ -14,8 +14,10 @@
             </div>
         </div>
         <form name="addUpstream" class="col s7" novalidate ng-submit="save()">
+            <object-properties schema="schema" object="upstream" errors="errors"></object-properties>
             <div class="row">
-                <div class="input-field col s12" ng-show="isEdit()">
+                
+            <!--    <div class="input-field col s12" ng-show="isEdit()">
                     <input id="id" ng-model="upstream.id" type="text" class="validate"
                         ng-class="{invalid: error.id}" ng-readonly="isEdit()" >
                     <label for="id" ng-class="{active:upstream.id}">ID</label>
@@ -33,7 +35,12 @@
                     <label for="slots" ng-class="{active:upstream.slots}">Slot</label>
                     <app-field-error error="error.slots"></app-field-error>
                 </div>
-
+                <div class="input-field col s12">
+                    <input id="hash_on" autofocus ng-required="true" ng-model="upstream.hash_on" type="text" 
+                        ng-class="{invalid: error.hash_on}" class="validate">
+                    <label for="hash_on" ng-class="{active:upstream.hash_on}">hash_on</label>
+                    <app-field-error error="error.hash_on"></app-field-error>
+                </div> -->
                 <div class="input-field col s4">
                     <a href="#!/upstreams/{{upstream.id}}/targets/add" class="waves-effect waves-light btn" ng-show="isEdit()">
                         <i class="material-icons left">add_box</i>

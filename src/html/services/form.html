@@ -1,0 +1,28 @@
+<div class="container">
+    <h3 class="header">{{title}}</h3>
+
+    <div class="row">
+        <div class="col s5">
+            <div class="card-panel teal">
+                <p class="white-text">
+                    Service entities, as the name implies, are abstractions of each of your own upstream services. Examples of Services would be a data transformation microservice, a billing API, etc.
+                </p>
+
+                <p class="white-text">
+                    Checkout <a href="https://getkong.org/docs/latest/admin-api/#add-service" target="_blank">Kong documentation</a> for the meaning of the form parameters.
+                </p>
+            </div>
+        </div>
+        <form name="addService" class="col s7" novalidate ng-submit="save()">
+            <object-properties schema="schema" object="service" errors="errors"></object-properties>
+            <div class="row">
+                <div class="input-field col s4">
+                    <button type="submit" class="waves-effect waves-light btn right">
+                        {{action}}
+                    </button>
+                </div>
+            </div>
+            <input type="hidden" ng-model="service.id" value="{{service.id}}"/>
+        </form>
+    </div>
+</div>

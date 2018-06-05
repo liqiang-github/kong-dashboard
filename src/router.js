@@ -148,10 +148,19 @@
       .when('/upstreams/add', {
         templateUrl: 'html/upstreams/form.html',
         controller: 'UpstreamController',
+        resolve: {
+          upstream: function () { return {} }
+        }
       })
       .when('/upstreams/:id', {
         templateUrl: 'html/upstreams/form.html',
         controller: 'UpstreamController',
+        resolve: {
+          upstream: ['Kong', '$route', function (Kong, $route) {
+            var id = $route.current.params.id;
+            return Kong.get('/upstreams/' + id);
+          }]
+        }
       })
       .when('/upstreams/:upstream_id/targets', {
         templateUrl: 'html/targets/index.html',
@@ -166,6 +175,50 @@
       .when('/upstreams/:upstream_id/targets/add', {
         templateUrl: 'html/targets/form.html',
         controller: 'TargetController',
+      })
+      .when('/services', {
+        templateUrl: 'html/services/index.html',
+        controller: 'ServicesController',
+      })
+      .when('/services/add', {
+        templateUrl: 'html/services/form.html',
+        controller: 'ServiceController',
+        resolve: {
+          service: function () {
+            return {}
+          }
+        }
+      })
+      .when('/services/:id', {
+        templateUrl: 'html/services/form.html',
+        controller: 'ServiceController',
+        resolve: {
+          service: ['Kong', '$route', function (Kong, $route) {
+            var id = $route.current.params.id;
+            return Kong.get('/services/' + id);
+          }]
+        }
+      })
+      .when('/routes', {
+        templateUrl: 'html/routes/index.html',
+        controller: 'RoutesController',
+      })
+      .when('/routes/add', {
+        templateUrl: 'html/routes/form.html',
+        controller: 'RouteController',
+        resolve: {
+          route: function () { return {} }
+        }
+      })
+      .when('/routes/:id', {
+        templateUrl: 'html/routes/form.html',
+        controller: 'RouteController',
+        resolve: {
+          route: ['Kong', '$route', function (Kong, $route) {
+            var id = $route.current.params.id;
+            return Kong.get('/routes/' + id);
+          }]
+        }
       })
       .otherwise({redirectTo: '/'});
   }

@@ -1,0 +1,121 @@
+<div class="container" infinite-scroll="loadMore()" infinite-scroll-distance="5" infinite-scroll-use-document-bottom="true">
+
+  <ul ng-show="routes.length >= 1" class="horizontal right">
+    <li class="search" style="width:300px;">
+        <div class="search-wrapper card">
+            <input class="search" placeholder="Search routes" value=""
+                    ng-focus="searchBarFocused = true"
+                    ng-blur="searchBarFocused = false"
+                    ng-model="searchInput"
+                    ng-change="searchRoutes()">
+            <i class="material-icons">search</i>
+            <div class="search-results collection" ng-show="searchBarFocused || viewingResults" ng-mouseover="viewingResults = true" ng-mouseout="viewingResults = false">
+            <p class="collection-item grey-text" ng-if="!searchInput">
+                <small>
+                Search Routes by ID or name.
+                </small>
+            </p>
+            <p class="collection-item grey-text" ng-if="searching && Utils.keys(searchResults).length == 0">
+                No results found.
+            </p>
+            <a class="collection-item" ng-repeat="(id, name) in searchResults" href="#!/routes/{{ id }}">
+                {{ name }}
+            </a>
+            </div>
+        </div>
+    </li>
+    <li>
+      <a href="#!/routes/add" class="btn-floating btn-large waves-effect waves-light">
+        <i class="material-icons">add</i>
+      </a>
+    </li>
+  </ul>
+
+  <h3 class="header">
+    Routes
+  </h3>
+
+    <p class="flow-text center" ng-show="total === null" style="margin-top:50px;">
+        <app-loader></app-loader>
+    </p>
+
+    <div class ng-show="total === 0">
+        <p class="flow-text center">
+            You haven't defined any Route in Kong yet.
+        </p>
+        <p class="center">
+            <a href="#!/routes/add" class="waves-effect waves-light btn">
+                <i class="material-icons left">add_box</i>
+                Add Route
+            </a>
+        </p>
+    </div>
+
+    <table class="bordered " ng-show="total > 0">
+        <thead>
+        <tr>
+            <th>Hosts</th>
+            <th>Paths</th>
+            <th>Methods</th>
+            <th></th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr ng-repeat="route in routes">
+            <td ng-if="env.schemas.route.properties.hosts">
+                <ul ng-if="route.hosts.length != 1" class="browser-default">
+                    <li ng-repeat="host in route.hosts">
+                        <a href="{{ 'https' in route.hosts ? 'https' : 'http' }}://{{ host }}" target="_blank">{{ host }}</a>
+                    </li>
+                </ul>
+                <a ng-if="route.hosts.length == 1" href="{{ 'https' in route.hosts ? 'https' : 'http' }}://{{ route.hosts[0] }}" target="_blank">
+                    {{ route.hosts[0] }}
+                </a>
+            </td>
+
+            <td ng-if="env.schemas.route.properties.paths">
+                <ul ng-if="route.paths.length != 1" class="browser-default">
+                    <li ng-repeat="path in route.paths">
+                        {{ path }}
+                    </li>
+                </ul>
+                <a ng-if="route.paths.length == 1" href="" target="_blank">
+                    {{ route.paths[0] }}
+                </a>
+            </td>
+
+            <td ng-if="env.schemas.route.properties.methods">
+            <ul ng-if="route.methods.length != 1" class="browser-default">
+                <li ng-repeat="method in route.methods">
+                    {{ methods }}
+                </li>
+            </ul>
+            <span ng-if="route.methods.length == 1">
+                {{ route.methods[0] }}
+            </span>
+            </td>
+
+            <td class="right">
+                <a class="btn-floating waves-effect waves-light" href="#!/routes/{{route.id}}">
+                    <i class="material-icons">mode_edit</i>
+                </a>
+                <a class="btn-floating waves-effect waves-light red modal-trigger" ng-click="showDeleteModal(route.id, route.name)">
+                    <i class="material-icons">delete</i>
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal Structure -->
+<div id="deleteRoute" class="modal">
+    <div class="modal-content">
+        <h5>Do you really want to delete the Route "{{current.name}}"?</h5>
+    </div>
+    <div class="modal-footer">
+        <a class="waves-effect waves-green btn" ng-click="abortDelete()">Noooooo!</a>
+        <a class="waves-effect waves-red btn red" ng-click="performDelete()" style="margin-right:10px">Yes</a>
+    </div>
+</div>

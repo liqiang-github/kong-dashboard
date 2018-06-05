@@ -1,5 +1,5 @@
-angular.module('app').controller("UpstreamsController", ["$scope", "Kong", function ($scope, Kong) {
-  $scope.upstreams = [];
+angular.module('app').controller("ServicesController", ["$scope", "Kong", function ($scope, Kong) {
+  $scope.services = [];
   $scope.total = null;
   $scope.offset = null;
   $scope.searchResults = {};
@@ -8,7 +8,7 @@ angular.module('app').controller("UpstreamsController", ["$scope", "Kong", funct
   var loaded_pages = [];
 
   $scope.loadMore = function() {
-    var page = '/upstreams?';
+    var page = '/services?';
     if ($scope.offset) {
       page += 'offset=' + $scope.offset + '&';
     }
@@ -18,40 +18,38 @@ angular.module('app').controller("UpstreamsController", ["$scope", "Kong", funct
     loaded_pages.push(page);
 
     Kong.get(page).then(function(collection) {
-      console.log(collection)
       if ($scope.total === null) {
         $scope.total = 0;
       }
-      $scope.upstreams.push.apply($scope.upstreams, collection.data);
-      $scope.total += collection.total;
+      $scope.services.push.apply($scope.services, collection.data);
+      $scope.total += collection.data.length;
       $scope.offset = collection.offset ? collection.offset : null;
-
     });
   };
   $scope.loadMore();
 
   $scope.showDeleteModal = function (id, name) {
     $scope.current = {id: id, name: name};
-    $('#deleteUpstream').modal('open');
+    $('#deleteService').modal('open');
   };
 
   $scope.abortDelete = function () {
-    $('#deleteUpstream').modal('close');
+    $('#deleteService').modal('close');
   };
 
   $scope.performDelete = function () {
-    $('#deleteUpstream').modal('close');
-    Kong.delete('/upstreams/' + $scope.current.id).then(function (response) {
+    $('#deleteService').modal('close');
+    Kong.delete('/services/' + $scope.current.id).then(function (response) {
       $scope.total -= 1;
-      $scope.upstreams.forEach(function(element, index) {
+      $scope.services.forEach(function(element, index) {
         if (element.id === $scope.current.id) {
-          $scope.upstreams.splice(index, 1);
+          $scope.services.splice(index, 1);
         }
       });
     });
   };
 
-  $scope.searchUpstreams = function() {
+  $scope.searchServices = function() {
     $scope.searchResults = {};
     var input = $scope.searchInput;
     if (!input) {
@@ -67,7 +65,6 @@ angular.module('app').controller("UpstreamsController", ["$scope", "Kong", funct
       });
     };
 
-    Kong.get('/upstreams?id=' + input).then(populateResults);
-    Kong.get('/upstreams?name=' + input).then(populateResults);
+    Kong.get('/services/' + input).then(populateResults);
   };
 }]);
